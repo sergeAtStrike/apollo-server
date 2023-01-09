@@ -11,6 +11,45 @@ datasource db {
 }
 
 model User {
-  id   String @id() @default(uuid())
-  name String
+  id            String           @id() @default(uuid())
+  name          String
+  age           Int
+  email         String           @unique
+  role          Role             @default(BASIC)
+  preferences   UserPreferences? // 1-to-1 relationship
+  writtenPosts  Post[]           @relation("WrittenPosts") // 1-to-many relationship for writtten posts
+  favoritePosts Post[]           @relation("FavoritePosts") // 1-to-many relationship for fav posts
+
+  @@unique([age, name]) // block scoped directive: user must have a unique combination of name + age
+  @@index([email]) // block scoped dir: indexable by email, so we can search by email in addition to search by id
+}
+
+model UserPreferences {
+  id           String  @id() @default(uuid())
+  emailUpdates Boolean
+  user         User    @relation(fields: [userId], references: [id]) // 1-to-1 relationship
+  userId       String  @unique // 1-to-1 relationship
+}
+
+model Post {
+  id            String     @id() @default(uuid())
+  rating        Float
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  author        User       @relation("WrittenPosts", fields: [userId], references: [id]) // 1-to-many relationship for writtten posts
+  userId        String // 1-to-many relationship for writtten posts
+  favoritedBy   User       @relation("FavoritePosts", fields: [favoritedById], references: [id]) // 1-to-many relationship for fav posts
+  favoritedById String // 1-to-many relationship for fav posts
+  categories    Category[] // many-to-many relationship
+}
+
+model Category {
+  id    String @id() @default(uuid())
+  posts Post[] // many-to-many relationship
+  name  String
+}
+
+enum Role {
+  ADMIN
+  BASIC
 }
