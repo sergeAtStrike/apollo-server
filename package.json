@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "yarn compile && node ./dist/index.js",
+    "start": "yarn compile && node dist/index.js",
     "dev": "nodemon src/index.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
