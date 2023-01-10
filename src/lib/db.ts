@@ -1,12 +1,8 @@
-import { config } from "dotenv";
-
 import { PrismaClientSingletone } from "./utils";
-
-config({});
 
 const prisma = new PrismaClientSingletone();
 
-const main = async () => {
+export const main = async () => {
   try {
     // const user = await prisma.user.deleteMany();
 
@@ -63,5 +59,3 @@ const main = async () => {
     prisma.$disconnect();
   }
 };
-
-main();
