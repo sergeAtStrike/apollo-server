@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "compile": "tsc",
     "start": "yarn compile && node dist/index.js",
@@ -14,6 +13,7 @@
     "prisma:migrate:deploy": "npx prisma migrate deploy"
   },
   "devDependencies": {
+    "@tsconfig/node18": "^1.0.1",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^18.11.18",
     "nodemon": "^2.0.20",
