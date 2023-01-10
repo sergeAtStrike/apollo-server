@@ -40,9 +40,7 @@ const main = async () => {
 
     const users = await prisma.user.findMany({
       where: {
-        userPreferences: {
-          emailUpdates: true,
-        },
+        userPreferences: null,
       },
     });
 
