@@ -8,7 +8,7 @@ import { resolvers } from "./resolvers";
 
 config({});
 
-const PORT = +(process.env.PORT || 4000);
+const PORT = parseInt(process.env.PORT || "4000");
 
 const typeDefs = gql(
   fs.readFileSync("src/schema/schema.graphql", { encoding: "utf8" })
