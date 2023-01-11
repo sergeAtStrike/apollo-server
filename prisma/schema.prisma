@@ -10,46 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                String           @id() @default(uuid())
-  name              String
-  age               Int
-  email             String           @unique
-  role              Role             @default(BASIC)
-  userPreferences   UserPreferences? @relation(fields: [userPreferencesId], references: [id]) // 1-to-1 relationship
-  userPreferencesId String?          @unique // 1-to-1 relationship
-  writtenPosts      Post[]           @relation("WrittenPosts") // 1-to-many relationship for writtten posts
-  favoritePosts     Post[]           @relation("FavoritePosts") // 1-to-many relationship for fav posts
-
-  @@unique([age, name]) // block scoped directive: user must have a unique combination of name + age
-  @@index([email]) // block scoped dir: indexable by email, so we can search by email in addition to search by id
+model Image {
+  id     String @id @default(uuid())
+  url    String
+  width  Int?
+  height Int?
+  book   Book?
 }
 
-model UserPreferences {
-  id           String  @id() @default(uuid())
-  emailUpdates Boolean
-  user         User?
+model Book {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String?
+  author      Author   @relation(fields: [authorId], references: [id])
+  authorId    String
+  image       Image?   @relation(fields: [imageId], references: [id])
+  imageId     String?  @unique
 }
 
-model Post {
-  id            String     @id() @default(uuid())
-  rating        Float
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  author        User       @relation("WrittenPosts", fields: [userId], references: [id]) // 1-to-many relationship for writtten posts
-  userId        String // 1-to-many relationship for writtten posts
-  favoritedBy   User       @relation("FavoritePosts", fields: [favoritedById], references: [id]) // 1-to-many relationship for fav posts
-  favoritedById String // 1-to-many relationship for fav posts
-  categories    Category[] // many-to-many relationship
-}
-
-model Category {
-  id    String @id() @default(uuid())
-  posts Post[] // many-to-many relationship
-  name  String
-}
-
-enum Role {
-  ADMIN
-  BASIC
+model Author {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  about     String
+  books     Book[]
 }

@@ -4,6 +4,8 @@ import { gql } from "graphql-tag";
 import fs from "fs";
 import { config } from "dotenv";
 
+import { PrismaClientSingletone } from "./lib/db";
+import { ServerContextType } from "./types";
 import { resolvers } from "./resolvers";
 
 config({});
@@ -14,7 +16,7 @@ const typeDefs = gql(
   fs.readFileSync("src/schema/schema.graphql", { encoding: "utf8" })
 );
 
-const server = new ApolloServer({
+const server = new ApolloServer<ServerContextType>({
   typeDefs,
   resolvers,
   introspection: process.env.NODE_ENV !== "production",
@@ -22,6 +24,9 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: PORT },
+  context: async ({ req, res }) => {
+    return { req, db: new PrismaClientSingletone() };
+  },
 })
   .then(({ url }) => {
     console.log(`🚀  Apollo Server at: ${url}`);
