@@ -19,7 +19,7 @@ const typeDefs = gql(
 const server = new ApolloServer<ServerContextType>({
   typeDefs,
   resolvers,
-  introspection: process.env.NODE_ENV !== "production",
+  introspection: true, //process.env.NODE_ENV !== "production",
 });
 
 startStandaloneServer(server, {
